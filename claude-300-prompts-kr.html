@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>클로드 프롬프트 300선</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+:root {
+  --hermes: #E8521A;
+  --hermes-hover: #C94010;
+  --hermes-light: #FFF3EE;
+  --hermes-mid: rgba(232,82,26,0.12);
+  --bg: #F8F6F3;
+  --bg-card: #FFFFFF;
+  --text-primary: #1A1A18;
+  --text-secondary: #5C5C58;
+  --text-muted: #9B9B96;
+  --border: #E8E6E1;
+  --border-hover: #C8C6C0;
+  --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-hover: 0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04);
+  --radius: 12px;
+  --font: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text-primary);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Header ── */
+.site-header {
+  background: #FFFFFF;
+  border-bottom: 1px solid var(--border);
+  padding: 0 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(8px);
+}
+
+.header-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+  gap: 1.5rem;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.logo-mark {
+  width: 28px;
+  height: 28px;
+  background: var(--hermes);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-mark svg { width: 16px; height: 16px; fill: white; }
+
+.logo-text {
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}
+
+.header-search {
+  flex: 1;
+  max-width: 420px;
+  position: relative;
+}
+
+.header-search input {
+  width: 100%;
+  height: 38px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0 1rem 0 2.5rem;
+  font-family: var(--font);
+  font-size: 0.875rem;
+  background: var(--bg);
+  color: var(--text-primary);
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.header-search input:focus {
+  border-color: var(--hermes);
+  box-shadow: 0 0 0 3px rgba(232,82,26,0.1);
+}
+
+.header-search input::placeholder { color: var(--text-muted); }
+
+.search-icon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 15px;
+  height: 15px;
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.header-count {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+.header-count span { color: var(--hermes); font-weight: 700; }
+
+/* ── Hero ── */
+.hero {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 4rem 2rem 2.5rem;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.hero-title {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+  color: var(--text-primary);
+}
+
+.hero-title em {
+  font-style: normal;
+  color: var(--hermes);
+}
+
+.hero-desc {
+  margin-top: 0.75rem;
+  font-size: 1rem;
+  color: var(--text-secondary);
+  font-weight: 400;
+  max-width: 480px;
+}
+
+.hero-badge {
+  flex-shrink: 0;
+  background: var(--hermes);
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border-radius: 100px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+/* ── Filters ── */
+.filter-bar {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 2rem 2rem;
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  height: 36px;
+  padding: 0 1rem;
+  border-radius: 100px;
+  border: 1.5px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  font-family: var(--font);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  white-space: nowrap;
+}
+
+.filter-btn:hover {
+  border-color: var(--hermes);
+  color: var(--hermes);
+}
+
+.filter-btn.active {
+  background: var(--hermes);
+  border-color: var(--hermes);
+  color: white;
+}
+
+.filter-btn .count {
+  font-size: 0.72rem;
+  font-weight: 700;
+  opacity: 0.7;
+}
+
+.filter-btn.active .count { opacity: 0.85; }
+
+/* ── Grid ── */
+.prompts-grid {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 2rem 5rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1rem;
+}
+
+/* ── Card ── */
+.prompt-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  box-shadow: var(--shadow);
+  transition: box-shadow 0.2s, border-color 0.2s, transform 0.15s;
+  position: relative;
+  overflow: hidden;
+}
+
+.prompt-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: transparent;
+  transition: background 0.2s;
+}
+
+.prompt-card:hover {
+  box-shadow: var(--shadow-hover);
+  border-color: var(--border-hover);
+  transform: translateY(-1px);
+}
+
+.prompt-card:hover::before {
+  background: var(--hermes);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.card-num {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+}
+
+.card-cat {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 0.2rem 0.6rem;
+  border-radius: 100px;
+  background: var(--hermes-mid);
+  color: var(--hermes);
+  text-transform: uppercase;
+}
+
+.card-title {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  line-height: 1.3;
+}
+
+.card-content {
+  font-size: 0.825rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  flex: 1;
+}
+
+.card-content mark {
+  background: var(--hermes-light);
+  color: var(--hermes-hover);
+  border-radius: 3px;
+  padding: 0 2px;
+}
+
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-top: 0.25rem;
+  border-top: 1px solid var(--border);
+  margin-top: auto;
+}
+
+.copy-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  height: 30px;
+  padding: 0 0.75rem;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.copy-btn:hover {
+  border-color: var(--hermes);
+  color: var(--hermes);
+  background: var(--hermes-light);
+}
+
+.copy-btn.copied {
+  border-color: #16a34a;
+  color: #16a34a;
+  background: #f0fdf4;
+}
+
+.copy-btn svg { width: 12px; height: 12px; flex-shrink: 0; }
+
+/* ── Toast ── */
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(1rem);
+  background: var(--text-primary);
+  color: white;
+  padding: 0.6rem 1.25rem;
+  border-radius: 100px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s, transform 0.2s;
+  z-index: 200;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ── Empty state ── */
+.empty-state {
+  grid-column: 1/-1;
+  text-align: center;
+  padding: 5rem 2rem;
+  color: var(--text-muted);
+}
+
+.empty-state h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+}
+
+/* ── Divider line ── */
+.section-divider {
+  max-width: 1280px;
+  margin: 0 auto 2rem;
+  padding: 0 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.section-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ── Footer ── */
+.site-footer {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  border-top: 1px solid var(--border);
+}
+
+.site-footer a { color: var(--hermes); text-decoration: none; }
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .hero { flex-direction: column; align-items: flex-start; padding: 2.5rem 1.25rem 1.5rem; }
+  .header-inner { padding: 0; gap: 0.75rem; }
+  .site-header { padding: 0 1.25rem; }
+  .filter-bar { padding: 0 1.25rem 1.5rem; }
+  .prompts-grid { padding: 0 1.25rem 4rem; grid-template-columns: 1fr; gap: 0.75rem; }
+  .header-search { max-width: 100%; }
+  .header-count { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="site-header">
+  <div class="header-inner">
+    <a href="#" class="logo">
+      <div class="logo-mark">
+        <svg viewBox="0 0 16 16"><path d="M8 1L2 4v5c0 3.3 2.5 5.7 6 7 3.5-1.3 6-3.7 6-7V4L8 1z"/></svg>
+      </div>
+      <span class="logo-text">클로드 프롬프트 300선</span>
+    </a>
+    <div class="header-search">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8">
+        <circle cx="9" cy="9" r="6"/><path d="M15 15l-3.5-3.5"/>
+      </svg>
+      <input type="search" id="searchInput" placeholder="프롬프트 검색..." autocomplete="off">
+    </div>
+    <div class="header-count">총 <span id="visibleCount">300</span> / 300개</div>
+  </div>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+  <div>
+    <h1 class="hero-title">클로드 프롬프트<br><em>300선</em></h1>
+    <p class="hero-desc">코딩, AI 워크플로우, 리서치, 자동화, 콘텐츠, 생산성을 위한 즉시 사용 가능한 프롬프트 컬렉션</p>
+  </div>
+  <div class="hero-badge">한국어판 · Korean Edition</div>
+</section>
+
+<!-- Filters -->
+<div class="filter-bar" id="filterBar">
+  <button class="filter-btn active" data-cat="all">전체 <span class="count">300</span></button>
+  <button class="filter-btn" data-cat="coding">코딩 <span class="count">50</span></button>
+  <button class="filter-btn" data-cat="ai-workflows">AI 워크플로우 <span class="count">50</span></button>
+  <button class="filter-btn" data-cat="research">리서치 <span class="count">50</span></button>
+  <button class="filter-btn" data-cat="automation">자동화 <span class="count">50</span></button>
+  <button class="filter-btn" data-cat="content">콘텐츠 <span class="count">50</span></button>
+  <button class="filter-btn" data-cat="productivity">생산성 <span class="count">50</span></button>
+</div>
+
+<!-- Grid -->
+<main class="prompts-grid" id="promptsGrid"></main>
+
+<!-- Toast -->
+<div class="toast" id="toast">프롬프트가 복사되었습니다</div>
+
+<!-- Footer -->
+<footer class="site-footer">
+  원본: <a href="https://vishnuai.in/300-claude-prompts" target="_blank">vishnuai.in</a> · 한국어판 제작
+</footer>
+
+<script>
+const CAT_LABELS = {
+  'coding': '코딩',
+  'ai-workflows': 'AI 워크플로우',
+  'research': '리서치',
+  'automation': '자동화',
+  'content': '콘텐츠',
+  'productivity': '생산성'
+};
+
+const PROMPTS = [
+  // ── CODING #1-50 ──
+  {id:1,ko:"코드 리뷰",cat:"coding",en:"Review this code as a senior engineer. Identify bugs, security vulnerabilities, performance issues, and style problems. Explain each issue and suggest a fix: [PASTE CODE]"},
+  {id:2,ko:"오류 디버깅",cat:"coding",en:"I am getting this error: [ERROR MESSAGE]. Here is the relevant code: [PASTE CODE]. Walk me through every possible cause and fix each one."},
+  {id:3,ko:"가독성을 위한 리팩토링",cat:"coding",en:"Refactor this code to be cleaner and more readable without changing its functionality. Add comments explaining complex logic: [PASTE CODE]"},
+  {id:4,ko:"단위 테스트 작성",cat:"coding",en:"Write comprehensive unit tests for this function. Cover the happy path, edge cases, null inputs, and error conditions: [PASTE FUNCTION]"},
+  {id:5,ko:"성능 최적화",cat:"coding",en:"Analyze this code for performance bottlenecks. Identify the slowest parts and rewrite them to be more efficient: [PASTE CODE]"},
+  {id:6,ko:"TypeScript로 변환",cat:"coding",en:"Convert this JavaScript code to TypeScript. Add proper type definitions for all variables, parameters, and return values: [PASTE CODE]"},
+  {id:7,ko:"코드 설명",cat:"coding",en:"Explain this code to me like I have never seen it before. What does it do, how does it work, and why is it written this way: [PASTE CODE]"},
+  {id:8,ko:"API 엔드포인트 생성",cat:"coding",en:"Write a REST API endpoint in [LANGUAGE/FRAMEWORK] that [DESCRIBE WHAT IT SHOULD DO]. Include input validation, error handling, and proper HTTP status codes."},
+  {id:9,ko:"데이터베이스 쿼리 최적화",cat:"coding",en:"This SQL query is running slowly: [PASTE QUERY]. Analyze it, explain why it is slow, and rewrite it to be faster. Suggest any indexes that would help."},
+  {id:10,ko:"문서 작성",cat:"coding",en:"Write clear developer documentation for this function including purpose, parameters, return values, example usage, and edge cases: [PASTE FUNCTION]"},
+  {id:11,ko:"보안 감사",cat:"coding",en:"Audit this code for security vulnerabilities. Check for SQL injection, XSS, authentication issues, exposed secrets, and any other risks: [PASTE CODE]"},
+  {id:12,ko:"CLI 도구 개발",cat:"coding",en:"Write a command line tool in Python that [DESCRIBE FUNCTIONALITY]. Include argument parsing, error handling, help text, and a usage example."},
+  {id:13,ko:"비동기 함수로 변환",cat:"coding",en:"Convert this synchronous function to async/await. Handle all promise rejections properly and maintain the same functionality: [PASTE FUNCTION]"},
+  {id:14,ko:"데이터 스키마 설계",cat:"coding",en:"Design a database schema for [DESCRIBE APPLICATION]. Include all tables, columns, data types, relationships, indexes, and explain your design decisions."},
+  {id:15,ko:"정규식 작성",cat:"coding",en:"Write a regex pattern that matches [DESCRIBE WHAT TO MATCH]. Explain each part of the pattern and show example matches and non-matches."},
+  {id:16,ko:"웹 스크래퍼 개발",cat:"coding",en:"Write a Python web scraper that extracts [DESCRIBE DATA] from [URL/TYPE OF SITE]. Handle pagination, rate limiting, and failed requests gracefully."},
+  {id:17,ko:"코드 아키텍처 리뷰",cat:"coding",en:"Review this architecture and tell me what problems you foresee at scale. What would break first and how should I redesign it: [DESCRIBE OR PASTE ARCHITECTURE]"},
+  {id:18,ko:"에러 처리 추가",cat:"coding",en:"Add comprehensive error handling to this code. Catch all possible failures, log them appropriately, and fail gracefully: [PASTE CODE]"},
+  {id:19,ko:"크론 작업 개발",cat:"coding",en:"Write a cron job in [LANGUAGE] that [DESCRIBE TASK]. It should run [FREQUENCY], handle failures, and send an alert if something goes wrong."},
+  {id:20,ko:"언어 간 코드 변환",cat:"coding",en:"Translate this code from [LANGUAGE A] to [LANGUAGE B]. Maintain all functionality and use idiomatic patterns for the target language: [PASTE CODE]"},
+  {id:21,ko:"웹훅 핸들러 작성",cat:"coding",en:"Write a webhook handler in [FRAMEWORK] that receives events from [SERVICE]. Validate the signature, parse the payload, and handle [DESCRIBE EVENTS]."},
+  {id:22,ko:"속도 제한기 개발",cat:"coding",en:"Implement a rate limiter in [LANGUAGE] that allows [X] requests per [TIME PERIOD] per user. Handle edge cases and include a way to whitelist certain users."},
+  {id:23,ko:"미들웨어 생성",cat:"coding",en:"Write middleware for [FRAMEWORK] that [DESCRIBE WHAT IT SHOULD DO]. Make it reusable, well documented, and handle all edge cases."},
+  {id:24,ko:"캐싱 전략 설계",cat:"coding",en:"Design a caching strategy for [DESCRIBE SYSTEM]. What should be cached, for how long, when should it be invalidated, and what caching technology would you use?"},
+  {id:25,ko:"데이터 마이그레이션 스크립트 작성",cat:"coding",en:"Write a database migration script that [DESCRIBE WHAT IT NEEDS TO DO]. Make it idempotent, reversible, and safe to run on a production database."},
+  {id:26,ko:"인증 시스템 개발",cat:"coding",en:"Design and write a JWT authentication system in [FRAMEWORK]. Include signup, login, token refresh, logout, and protected route middleware."},
+  {id:27,ko:"목 데이터 생성",cat:"coding",en:"Write a script that generates realistic mock data for [DESCRIBE DATA STRUCTURE]. Generate [NUMBER] records and output as JSON."},
+  {id:28,ko:"페이지네이션 구현",cat:"coding",en:"Add cursor-based pagination to this API endpoint. Include a page size limit, handle edge cases, and return proper metadata: [PASTE ENDPOINT CODE]"},
+  {id:29,ko:"CI/CD 파이프라인 작성",cat:"coding",en:"Write a GitHub Actions workflow that runs tests, checks code quality, builds the application, and deploys to [PLATFORM] on every push to main."},
+  {id:30,ko:"마이크로서비스 설계",cat:"coding",en:"Design the architecture for a microservice that handles [DESCRIBE FUNCTIONALITY]. What endpoints does it need, how does it communicate with other services, and what does its data model look like?"},
+  {id:31,ko:"재시도 로직 구현",cat:"coding",en:"Add retry logic to this function that makes an external API call. Handle rate limits, transient errors, and use exponential backoff: [PASTE FUNCTION]"},
+  {id:32,ko:"상태 머신 작성",cat:"coding",en:"Implement a state machine for [DESCRIBE SYSTEM WITH STATES]. Define all states, transitions, guards, and actions."},
+  {id:33,ko:"큐 시스템 개발",cat:"coding",en:"Implement a job queue in [LANGUAGE] that processes [DESCRIBE JOBS]. Include priority levels, retry logic, dead letter handling, and a way to monitor queue depth."},
+  {id:34,ko:"SDK 생성",cat:"coding",en:"Design and write a basic SDK in [LANGUAGE] for the following API. Make it easy to use, well documented, and handle authentication automatically: [PASTE API SPEC]"},
+  {id:35,ko:"React 컴포넌트 최적화",cat:"coding",en:"This React component is re-rendering too often and causing performance issues. Analyze the code and address performance bottlenecks: [PASTE COMPONENT]"},
+  {id:36,ko:"통합 테스트 작성",cat:"coding",en:"Write integration tests for this API endpoint that test the full request/response cycle including the database: [PASTE ENDPOINT CODE]"},
+  {id:37,ko:"검색 기능 구현",cat:"coding",en:"Implement full-text search for [DESCRIBE DATA] using [TECHNOLOGY]. Include fuzzy matching, relevance scoring, and filtering by [FIELDS]."},
+  {id:38,ko:"알림 시스템 개발",cat:"coding",en:"Design and implement a notification system that sends [EMAIL/SMS/PUSH] notifications when [DESCRIBE TRIGGERS]. Include templates, queuing, and delivery tracking."},
+  {id:39,ko:"파서 작성",cat:"coding",en:"Write a parser in [LANGUAGE] that reads [DESCRIBE FORMAT] and outputs [DESCRIBE OUTPUT]. Handle malformed input gracefully."},
+  {id:40,ko:"이벤트 시스템 설계",cat:"coding",en:"Design an event-driven architecture for [DESCRIBE APPLICATION]. What events should exist, how should they be structured, and how should services communicate through them?"},
+  {id:41,ko:"파일 업로드 구현",cat:"coding",en:"Write a file upload handler in [FRAMEWORK] that accepts [FILE TYPES], validates size and type, stores files in [STORAGE], and returns a URL."},
+  {id:42,ko:"설정 관리 시스템 개발",cat:"coding",en:"Design a configuration management system for [APPLICATION TYPE] that supports multiple environments, secret management, and runtime updates without restarts."},
+  {id:43,ko:"헬스 체크 엔드포인트 작성",cat:"coding",en:"Write a health check endpoint for [FRAMEWORK] that checks database connectivity, external service availability, and system resources with proper HTTP status codes."},
+  {id:44,ko:"피처 플래그 구현",cat:"coding",en:"Design and implement a feature flag system allowing enabling/disabling features per user, traffic percentage, or globally without deployment."},
+  {id:45,ko:"로깅 시스템 생성",cat:"coding",en:"Implement structured logging for [APPLICATION TYPE] including request IDs, user context, performance timing, and integration with [LOGGING SERVICE]."},
+  {id:46,ko:"보고서 생성기 개발",cat:"coding",en:"Write code that queries [DESCRIBE DATA SOURCE] and generates a [FORMAT] report showing [DESCRIBE METRICS], scheduled to run [FREQUENCY] and emailed to [RECIPIENTS]."},
+  {id:47,ko:"데이터 유효성 검사 구현",cat:"coding",en:"Write a comprehensive data validation layer for this API. Validate all inputs, return clear error messages, and prevent malformed data from reaching the database: [PASTE API SPEC]"},
+  {id:48,ko:"플러그인 시스템 설계",cat:"coding",en:"Design a plugin architecture for [APPLICATION] allowing third-party developers to extend functionality without modifying core code, with defined plugin interface and lifecycle hooks."},
+  {id:49,ko:"부하 테스트 스크립트 작성",cat:"coding",en:"Write a load testing script using [TOOL] that simulates [NUMBER] concurrent users performing [DESCRIBE USER ACTIONS] and reports response times and error rates."},
+  {id:50,ko:"대시보드 백엔드 개발",cat:"coding",en:"Design and write the backend for a real-time dashboard showing [DESCRIBE METRICS]. Include WebSocket support, data aggregation, and efficient querying."},
+
+  // ── AI WORKFLOWS #51-100 ──
+  {id:51,ko:"AI 에이전트 설계",cat:"ai-workflows",en:"Design an AI agent that can [DESCRIBE GOAL]. What tools does it need, what decisions should it make autonomously, what should require human approval, and how should it handle failures?"},
+  {id:52,ko:"프롬프트 체인 구축",cat:"ai-workflows",en:"Design a multi-step prompt chain that takes [INPUT] and produces [OUTPUT]. Break it into discrete steps, define what each step does, and explain how outputs feed into the next step."},
+  {id:53,ko:"시스템 프롬프트 생성",cat:"ai-workflows",en:"Write a system prompt for an AI assistant that works as a [DESCRIBE ROLE] for [DESCRIBE COMPANY/USE CASE]. Define its personality, capabilities, limitations, and how it should handle edge cases."},
+  {id:54,ko:"프롬프트 품질 평가",cat:"ai-workflows",en:"Evaluate this prompt and tell me everything that is wrong with it. Then rewrite it to be more precise, consistent, and likely to produce the output I actually want: [PASTE PROMPT]"},
+  {id:55,ko:"RAG 시스템 설계",cat:"ai-workflows",en:"Design a Retrieval Augmented Generation system for [DESCRIBE USE CASE]. What data should be indexed, how should it be chunked, what embedding model should be used, and how should retrieval be structured?"},
+  {id:56,ko:"분류 파이프라인 구축",cat:"ai-workflows",en:"Design an AI classification pipeline that categorizes [DESCRIBE INPUTS] into [DESCRIBE CATEGORIES]. Include data preprocessing, model selection, confidence thresholds, and handling of edge cases."},
+  {id:57,ko:"추출 프롬프트 생성",cat:"ai-workflows",en:"Write a prompt that extracts [DESCRIBE INFORMATION] from [DESCRIBE DOCUMENT TYPE]. Output as structured JSON. Handle missing fields gracefully and flag uncertain extractions."},
+  {id:58,ko:"멀티 에이전트 시스템 설계",cat:"ai-workflows",en:"Design a multi-agent system where [NUMBER] AI agents collaborate to accomplish [DESCRIBE GOAL]. Define each agent's role, how they communicate, and how conflicts are resolved."},
+  {id:59,ko:"AI 평가 프레임워크 구축",cat:"ai-workflows",en:"Design a framework for evaluating the quality of AI outputs for [DESCRIBE USE CASE]. What metrics matter, how should they be measured, and what does good versus bad look like?"},
+  {id:60,ko:"요약 파이프라인 생성",cat:"ai-workflows",en:"Design a pipeline that processes [DESCRIBE CONTENT TYPE] and produces [DESCRIBE SUMMARY FORMAT]. Handle varying lengths, extract key entities, and flag content that needs human review."},
+  {id:61,ko:"콘텐츠 조정 시스템 설계",cat:"ai-workflows",en:"Design an AI content moderation pipeline for [DESCRIBE PLATFORM]. What categories of content need to be detected, what confidence thresholds trigger action, and how is the human review queue managed?"},
+  {id:62,ko:"질의응답 시스템 구축",cat:"ai-workflows",en:"Design a question answering system over [DESCRIBE KNOWLEDGE BASE]. How should documents be preprocessed, what retrieval strategy works best, and how should confidence be communicated to users?"},
+  {id:63,ko:"데이터 보강 워크플로우 생성",cat:"ai-workflows",en:"Design a workflow that takes [DESCRIBE INPUT DATA] and enriches it with [DESCRIBE ADDITIONAL INFORMATION] using AI. Define the steps, prompts, and how to handle failures."},
+  {id:64,ko:"AI 글쓰기 도우미 설계",cat:"ai-workflows",en:"Design an AI writing assistant for [DESCRIBE USE CASE]. What capabilities should it have, what constraints should it operate under, and how should it handle requests outside its scope?"},
+  {id:65,ko:"피드백 루프 시스템 구축",cat:"ai-workflows",en:"Design a system where AI outputs are evaluated, feedback is collected, and the system improves over time for [DESCRIBE USE CASE]. How is quality measured and what triggers retraining?"},
+  {id:66,ko:"문서 처리 파이프라인 생성",cat:"ai-workflows",en:"Design a pipeline that ingests [DESCRIBE DOCUMENT TYPES], extracts structured data, validates it, and stores it in [DESCRIBE SYSTEM]. Handle OCR, various formats, and malformed inputs."},
+  {id:67,ko:"개인화 엔진 설계",cat:"ai-workflows",en:"Design an AI personalization system for [DESCRIBE APPLICATION]. What signals should be used, how should recommendations be generated, and how should it handle new users with no history?"},
+  {id:68,ko:"AI 모니터링 시스템 구축",cat:"ai-workflows",en:"Design a monitoring system for an AI pipeline that tracks output quality, latency, cost, and failure rates. What alerts should exist and what dashboards should be built?"},
+  {id:69,ko:"프롬프트 템플릿 라이브러리 생성",cat:"ai-workflows",en:"Create a library of 10 reusable prompt templates for [DESCRIBE USE CASE]. Each template should have placeholders, usage instructions, and example inputs and outputs."},
+  {id:70,ko:"인간 참여 루프 시스템 설계",cat:"ai-workflows",en:"Design a system where AI handles [DESCRIBE TASKS] autonomously but routes edge cases to humans. Define the confidence thresholds, escalation paths, and how human feedback is incorporated."},
+  {id:71,ko:"지식 그래프 추출 파이프라인 구축",cat:"ai-workflows",en:"Design a pipeline that reads [DESCRIBE DOCUMENTS] and extracts entities, relationships, and facts into a knowledge graph. Define the schema and extraction prompts."},
+  {id:72,ko:"AI 고객 서비스 에이전트 생성",cat:"ai-workflows",en:"Design an AI customer service agent for [DESCRIBE BUSINESS]. What questions can it answer, when should it escalate to a human, and how should it handle frustrated customers?"},
+  {id:73,ko:"코드 리뷰 AI 설계",cat:"ai-workflows",en:"Design an AI code review system that automatically reviews pull requests for [DESCRIBE STANDARDS]. What should it check, how should feedback be formatted, and what issues should block merges?"},
+  {id:74,ko:"리서치 어시스턴트 구축",cat:"ai-workflows",en:"Design an AI research assistant that can [DESCRIBE RESEARCH TASKS]. How should it search, synthesize information, cite sources, and flag low confidence conclusions?"},
+  {id:75,ko:"경쟁 인텔리전스 시스템 생성",cat:"ai-workflows",en:"Design an AI system that monitors [DESCRIBE COMPETITORS] and produces weekly intelligence reports covering [DESCRIBE AREAS]. What data sources should it monitor and how should insights be prioritized?"},
+  {id:76,ko:"미팅 인텔리전스 시스템 설계",cat:"ai-workflows",en:"Design an AI system that processes meeting transcripts and produces [DESCRIBE OUTPUTS: action items, summaries, decisions]. How should it handle multiple speakers and ambiguous assignments?"},
+  {id:77,ko:"계약 분석 파이프라인 구축",cat:"ai-workflows",en:"Design an AI pipeline that analyzes contracts and flags [DESCRIBE RISK TYPES]. What clauses should trigger alerts, how should confidence be communicated, and when should a lawyer review?"},
+  {id:78,ko:"감성 분석 시스템 생성",cat:"ai-workflows",en:"Design a sentiment analysis system for [DESCRIBE DATA SOURCE]. What dimensions of sentiment matter, how should nuance be handled, and how should results be aggregated and reported?"},
+  {id:79,ko:"리드 스코어링 시스템 설계",cat:"ai-workflows",en:"Design an AI lead scoring system for [DESCRIBE BUSINESS]. What signals predict conversion, how should scores be calculated, and how should the sales team use them?"},
+  {id:80,ko:"콘텐츠 추천 엔진 구축",cat:"ai-workflows",en:"Design a content recommendation engine for [DESCRIBE PLATFORM]. What signals drive recommendations, how should diversity be maintained, and how should new content be handled?"},
+  {id:81,ko:"이상 탐지 시스템 생성",cat:"ai-workflows",en:"Design an AI anomaly detection system for [DESCRIBE DATA]. What constitutes an anomaly, how should severity be classified, and what should happen when one is detected?"},
+  {id:82,ko:"번역 워크플로우 설계",cat:"ai-workflows",en:"Design an AI translation workflow for [DESCRIBE CONTENT TYPE] from [SOURCE LANGUAGE] to [TARGET LANGUAGES]. How should terminology consistency be maintained and how should quality be validated?"},
+  {id:83,ko:"제안서 생성 시스템 구축",cat:"ai-workflows",en:"Design an AI system that generates business proposals for [DESCRIBE BUSINESS]. What inputs does it need, what sections should proposals include, and how should customization work?"},
+  {id:84,ko:"리스크 평가 프레임워크 생성",cat:"ai-workflows",en:"Design an AI risk assessment system for [DESCRIBE DOMAIN]. What risk factors should be analyzed, how should they be weighted, and what output format helps decision makers act?"},
+  {id:85,ko:"음성 AI 시스템 설계",cat:"ai-workflows",en:"Design a voice AI assistant for [DESCRIBE USE CASE]. How should speech be processed, what intents need to be recognized, and how should ambiguous requests be handled?"},
+  {id:86,ko:"트렌드 탐지 시스템 구축",cat:"ai-workflows",en:"Design an AI system that monitors [DESCRIBE DATA SOURCES] and identifies emerging trends in [DESCRIBE DOMAIN]. How should trends be validated and how should false positives be filtered?"},
+  {id:87,ko:"컴플라이언스 검사 시스템 생성",cat:"ai-workflows",en:"Design an AI compliance checking system that validates [DESCRIBE CONTENT OR ACTIONS] against [DESCRIBE REGULATIONS]. How should violations be categorized and what remediation steps should be suggested?"},
+  {id:88,ko:"AI 온보딩 시스템 설계",cat:"ai-workflows",en:"Design an AI system that onboards new [EMPLOYEES/CUSTOMERS] by answering questions, guiding them through processes, and tracking their progress. How should gaps in knowledge be identified?"},
+  {id:89,ko:"예측 유지보수 시스템 구축",cat:"ai-workflows",en:"Design an AI predictive maintenance system for [DESCRIBE EQUIPMENT OR SYSTEM]. What signals predict failure, how far in advance can failures be predicted, and what actions should be triggered?"},
+  {id:90,ko:"재고 관리 AI 생성",cat:"ai-workflows",en:"Design an AI inventory management system for [DESCRIBE BUSINESS]. How should demand be forecasted, when should reorders be triggered, and how should seasonal patterns be handled?"},
+  {id:91,ko:"금융 분석 에이전트 설계",cat:"ai-workflows",en:"Design an AI agent that analyzes [DESCRIBE FINANCIAL DATA] and produces [DESCRIBE OUTPUTS]. What data sources does it need, what calculations should it perform, and how should uncertainty be communicated?"},
+  {id:92,ko:"소셜 미디어 모니터링 시스템 구축",cat:"ai-workflows",en:"Design an AI system that monitors social media for [DESCRIBE TOPICS OR BRANDS]. What signals matter, how should sentiment be tracked, and what triggers an urgent alert?"},
+  {id:93,ko:"기술 지원 AI 생성",cat:"ai-workflows",en:"Design an AI technical support system for [DESCRIBE PRODUCT]. How should it diagnose problems, when should it escalate, and how should it learn from resolved tickets?"},
+  {id:94,ko:"가격 최적화 시스템 설계",cat:"ai-workflows",en:"Design an AI pricing system for [DESCRIBE BUSINESS]. What factors should influence pricing, how should competitor prices be monitored, and how should price changes be validated before going live?"},
+  {id:95,ko:"사기 탐지 시스템 구축",cat:"ai-workflows",en:"Design an AI fraud detection system for [DESCRIBE TRANSACTION TYPE]. What signals indicate fraud, how should false positive rates be managed, and what happens when fraud is detected?"},
+  {id:96,ko:"AI 스케줄링 시스템 생성",cat:"ai-workflows",en:"Design an AI scheduling system for [DESCRIBE USE CASE]. How should it handle conflicts, priorities, constraints, and last minute changes?"},
+  {id:97,ko:"품질 관리 AI 설계",cat:"ai-workflows",en:"Design an AI quality control system for [DESCRIBE PRODUCT OR PROCESS]. What defects should be detected, what accuracy is acceptable, and how should borderline cases be handled?"},
+  {id:98,ko:"뉴스 집계 시스템 구축",cat:"ai-workflows",en:"Design an AI news aggregation and summarization system for [DESCRIBE TOPICS]. How should sources be ranked, bias be detected, and duplicate stories be deduplicated?"},
+  {id:99,ko:"개인화 학습 시스템 생성",cat:"ai-workflows",en:"Design an AI personalized learning system for [DESCRIBE SUBJECT]. How should knowledge gaps be identified, content difficulty be adjusted, and progress be measured?"},
+  {id:100,ko:"공급망 인텔리전스 시스템 설계",cat:"ai-workflows",en:"Design an AI system that monitors [DESCRIBE SUPPLY CHAIN] and predicts disruptions, optimizes inventory, and recommends actions. What data sources are critical?"},
+
+  // ── RESEARCH #101-150 ──
+  {id:101,ko:"심층 리서치 브리핑",cat:"research",en:"Research [TOPIC] comprehensively. Cover the current state, key players, recent developments, open questions, and what experts disagree about. Structure as a research brief."},
+  {id:102,ko:"경쟁사 분석",cat:"research",en:"Analyze [COMPANY/PRODUCT] against its top 5 competitors. Compare on [DIMENSIONS]. Identify where it leads, where it lags, and where the biggest opportunities are."},
+  {id:103,ko:"시장 규모 추정",cat:"research",en:"Estimate the market size for [DESCRIBE MARKET]. Use a bottom-up approach, show your assumptions clearly, and give a range rather than a single number."},
+  {id:104,ko:"논거 스틸맨닝",cat:"research",en:"Steel-man the argument that [CONTROVERSIAL POSITION]. Present the strongest possible version of this argument as its best advocate would make it. Then identify its weakest points."},
+  {id:105,ko:"투자 테제 분석",cat:"research",en:"Analyze the investment thesis for [COMPANY/ASSET]. What has to be true for this to be a good investment, what are the key risks, and what would change your view?"},
+  {id:106,ko:"SWOT 분석",cat:"research",en:"Conduct a deep SWOT analysis for [COMPANY/PROJECT/IDEA]. Go beyond surface level observations and identify second-order implications of each factor."},
+  {id:107,ko:"제1원칙 분석",cat:"research",en:"Break down [PROBLEM/INDUSTRY/ASSUMPTION] from first principles. What are the irreducible truths, what assumptions are people making that might be wrong, and what does this suggest?"},
+  {id:108,ko:"역사적 패턴 분석",cat:"research",en:"Analyze historical examples of [DESCRIBE SITUATION OR PATTERN]. What patterns emerge, what caused success or failure, and what lessons apply to [CURRENT SITUATION]?"},
+  {id:109,ko:"데이터 해석",cat:"research",en:"Interpret this data: [PASTE DATA OR DESCRIBE DATASET]. What are the key insights, what is surprising, what questions does it raise, and what decisions does it support?"},
+  {id:110,ko:"리스크 분석",cat:"research",en:"Conduct a comprehensive risk analysis for [DESCRIBE PROJECT OR DECISION]. Identify all risks, assess likelihood and impact, prioritize them, and suggest mitigations for the top five."},
+  {id:111,ko:"시나리오 계획",cat:"research",en:"Develop three scenarios for [DESCRIBE SITUATION]: a base case, an optimistic case, and a pessimistic case. What would cause each to occur and how should we prepare for each?"},
+  {id:112,ko:"문헌 검토",cat:"research",en:"Summarize the current state of research on [TOPIC]. What is well established, what is contested, what are the major schools of thought, and what are the key open questions?"},
+  {id:113,ko:"정책 분석",cat:"research",en:"Analyze the policy [DESCRIBE POLICY] from multiple stakeholder perspectives. Who benefits, who is harmed, what are the intended and unintended consequences, and what alternatives exist?"},
+  {id:114,ko:"기술 평가",cat:"research",en:"Assess the technology [DESCRIBE TECHNOLOGY] for use in [DESCRIBE CONTEXT]. Evaluate maturity, capabilities, limitations, costs, alternatives, and implementation risks."},
+  {id:115,ko:"비즈니스 모델 분석",cat:"research",en:"Analyze the business model of [COMPANY]. How does it make money, what are its unit economics, what drives growth, what are its vulnerabilities, and how defensible is it?"},
+  {id:116,ko:"인과 관계 분석",cat:"research",en:"Map the causal chain from [ROOT CAUSE] to [OUTCOME]. What are all the links in the chain, where could intervention have the most impact, and what feedback loops exist?"},
+  {id:117,ko:"전문가 의견 종합",cat:"research",en:"You are synthesizing the views of five leading experts on [TOPIC]. Present the areas of consensus, the key disagreements, and what the weight of expert opinion suggests."},
+  {id:118,ko:"트렌드 분석",cat:"research",en:"Analyze the trend of [DESCRIBE TREND]. How long has it been building, what is driving it, how durable is it, and what are its second and third order effects?"},
+  {id:119,ko:"의사결정 프레임워크",cat:"research",en:"Build a decision framework for [DESCRIBE DECISION TYPE]. What factors matter, how should they be weighted, what information is needed, and what does a good decision process look like?"},
+  {id:120,ko:"갭 분석",cat:"research",en:"Conduct a gap analysis between [CURRENT STATE] and [DESIRED STATE] for [DESCRIBE CONTEXT]. What are the gaps, what causes them, and what would close them most efficiently?"},
+  {id:121,ko:"근본 원인 분석",cat:"research",en:"Conduct a root cause analysis of [DESCRIBE PROBLEM OR FAILURE]. Use the five whys method, identify contributing factors, and recommend actions that address root causes not symptoms."},
+  {id:122,ko:"이해관계자 분석",cat:"research",en:"Map the stakeholders for [DESCRIBE PROJECT OR DECISION]. Who has power, who is affected, what does each party want, and how should each be engaged?"},
+  {id:123,ko:"가설 생성",cat:"research",en:"Generate 10 testable hypotheses about [DESCRIBE PHENOMENON OR PROBLEM]. For each, describe what evidence would confirm or refute it and how it could be tested."},
+  {id:124,ko:"유추적 추론",cat:"research",en:"Find 5 historical or cross-industry analogies for [DESCRIBE SITUATION]. What can each analogy teach us and where does the analogy break down?"},
+  {id:125,ko:"가정 매핑",cat:"research",en:"Map all the assumptions underlying [DESCRIBE PLAN OR BELIEF]. Categorize them by how critical they are and how uncertain they are. Which assumptions most need to be tested?"},
+  {id:126,ko:"2차 효과 분석",cat:"research",en:"Analyze the second and third order effects of [DESCRIBE DECISION OR TREND]. Go beyond the obvious first order effects and identify what most people are missing."},
+  {id:127,ko:"벤치마크 분석",cat:"research",en:"Benchmark [DESCRIBE SUBJECT] against industry best practices and top performers. Where does it rank, what specifically do the best performers do differently, and what is the improvement path?"},
+  {id:128,ko:"고객 리서치 종합",cat:"research",en:"Synthesize these customer interviews and identify the most important patterns: [PASTE INTERVIEW NOTES OR TRANSCRIPTS]. What are the key pain points, desires, and surprising insights?"},
+  {id:129,ko:"규제 환경 분석",cat:"research",en:"Analyze the regulatory landscape for [DESCRIBE INDUSTRY OR ACTIVITY] in [GEOGRAPHY]. What regulations apply, what is changing, and what are the compliance risks?"},
+  {id:130,ko:"기술 로드맵 분석",cat:"research",en:"Analyze the technology roadmap for [DESCRIBE TECHNOLOGY AREA]. What are the key milestones, what breakthroughs are needed, and what is the realistic timeline for [DESCRIBE CAPABILITY]?"},
+  {id:131,ko:"멘탈 모델 적용",cat:"research",en:"Apply the mental model of [DESCRIBE MENTAL MODEL] to analyze [DESCRIBE SITUATION]. What does this lens reveal that a conventional analysis would miss?"},
+  {id:132,ko:"사전 검토 분석",cat:"research",en:"Conduct a pre-mortem for [DESCRIBE PLAN]. Imagine it is 12 months from now and this has failed. What went wrong, why did it fail, and what could have been done differently?"},
+  {id:133,ko:"가치 사슬 분석",cat:"research",en:"Map the value chain for [DESCRIBE INDUSTRY]. Where is value created, where is it captured, where are the margins, and where is disruption most likely to occur?"},
+  {id:134,ko:"네트워크 효과 분석",cat:"research",en:"Analyze the network effects dynamics in [DESCRIBE MARKET OR PRODUCT]. What type of network effects exist, how strong are they, and what does this mean for competitive dynamics?"},
+  {id:135,ko:"해결해야 할 과제 분석",cat:"research",en:"Apply the Jobs to Be Done framework to understand why customers hire [DESCRIBE PRODUCT OR SERVICE]. What functional, emotional, and social jobs is it doing?"},
+  {id:136,ko:"경쟁 해자 분석",cat:"research",en:"Analyze the competitive moat of [COMPANY]. What sustainable advantages does it have, how durable are they, and what would erode them?"},
+  {id:137,ko:"인구통계 분석",cat:"research",en:"Analyze the demographic trends affecting [DESCRIBE MARKET OR INDUSTRY]. What shifts are occurring, how fast, and what are the implications for the next 10 years?"},
+  {id:138,ko:"수요와 공급 분석",cat:"research",en:"Analyze the supply and demand dynamics for [DESCRIBE MARKET]. What drives demand, what constrains supply, how tight is the market, and what would shift the balance?"},
+  {id:139,ko:"혁신 분석",cat:"research",en:"Analyze the innovation landscape in [DESCRIBE FIELD]. Where is innovation happening, who are the key innovators, what approaches are being tried, and where are the white spaces?"},
+  {id:140,ko:"가격 결정력 분석",cat:"research",en:"Analyze the pricing power of [COMPANY OR PRODUCT]. Can prices be raised without losing customers, what justifies premium pricing, and what limits pricing power?"},
+  {id:141,ko:"채널 분석",cat:"research",en:"Analyze the distribution channels for [DESCRIBE PRODUCT OR SERVICE]. Which channels reach the target customer most efficiently, what are the economics of each, and what is the optimal mix?"},
+  {id:142,ko:"브랜드 분석",cat:"research",en:"Analyze the brand of [COMPANY]. What does it stand for, how is it perceived, what is its equity, and what would strengthen or damage it?"},
+  {id:143,ko:"이탈 분석 프레임워크",cat:"research",en:"Design a framework for analyzing customer churn in [DESCRIBE BUSINESS]. What are the leading indicators, what segments churn most, and what interventions are most effective?"},
+  {id:144,ko:"파트너십 전략 분석",cat:"research",en:"Analyze potential partnership strategies for [DESCRIBE COMPANY]. What types of partners would create the most value, what would make a partnership successful, and what are the risks?"},
+  {id:145,ko:"시장 진출 전략 분석",cat:"research",en:"Analyze the go to market strategy for [DESCRIBE PRODUCT]. Who is the beachhead customer, what is the sales motion, how does word of mouth work, and what drives viral growth?"},
+  {id:146,ko:"운영 분석",cat:"research",en:"Analyze the operations of [DESCRIBE BUSINESS]. Where are the bottlenecks, what processes are most critical, where is waste occurring, and what would have the highest impact to improve?"},
+  {id:147,ko:"인재 분석",cat:"research",en:"Analyze the talent landscape for [DESCRIBE ROLE OR SKILL]. Where is the talent, what do they want, how competitive is hiring, and what would make [COMPANY] attractive to them?"},
+  {id:148,ko:"플랫폼 vs 제품 분석",cat:"research",en:"Analyze whether [DESCRIBE OFFERING] should be a product or a platform. What are the economics of each, what would make a platform successful, and what are the risks of each path?"},
+  {id:149,ko:"계절성 분석",cat:"research",en:"Analyze the seasonality patterns in [DESCRIBE BUSINESS OR MARKET]. How pronounced are they, what drives them, and how should strategy and operations adapt?"},
+  {id:150,ko:"출구 전략 분석",cat:"research",en:"Analyze potential exit strategies for [DESCRIBE COMPANY OR INVESTMENT]. What acquirers would be interested and why, what would drive valuation, and what is the realistic timeline?"},
+
+  // ── AUTOMATION #151-200 ──
+  {id:151,ko:"수동 프로세스 매핑",cat:"automation",en:"I do this task manually: [DESCRIBE TASK]. Map every step in detail, identify which steps could be automated, and design an automation that handles the full workflow."},
+  {id:152,ko:"Zapier 워크플로우 설계",cat:"automation",en:"Design a Zapier workflow that automates [DESCRIBE PROCESS]. Define the trigger, all the steps in sequence, what data is passed between steps, and how errors are handled."},
+  {id:153,ko:"이메일 자동화 시퀀스",cat:"automation",en:"Design an automated email sequence for [DESCRIBE PURPOSE]. Write the copy for each email, define the triggers and timing, and explain the goal of each message."},
+  {id:154,ko:"데이터 파이프라인 구축",cat:"automation",en:"Design a data pipeline that takes [DESCRIBE INPUT], transforms it by [DESCRIBE TRANSFORMATIONS], and loads it into [DESCRIBE DESTINATION]. Include error handling and monitoring."},
+  {id:155,ko:"보고서 자동 생성",cat:"automation",en:"Design an automation that pulls data from [DESCRIBE SOURCES], calculates [DESCRIBE METRICS], generates a [FORMAT] report, and sends it to [RECIPIENTS] every [FREQUENCY]."},
+  {id:156,ko:"리드 자격 확인 봇 구축",cat:"automation",en:"Design an automated lead qualification system that [DESCRIBE HOW LEADS COME IN], asks qualifying questions, scores them against [DESCRIBE CRITERIA], and routes them to the right person."},
+  {id:157,ko:"소셜 미디어 자동 게시",cat:"automation",en:"Design an automation that takes content from [DESCRIBE SOURCE], formats it for [PLATFORMS], schedules it for optimal times, and tracks performance. What tools would you use?"},
+  {id:158,ko:"고객 온보딩 자동화 구축",cat:"automation",en:"Design an automated customer onboarding flow for [DESCRIBE PRODUCT]. What happens at each step, what triggers the next step, and how are stuck customers identified and helped?"},
+  {id:159,ko:"청구서 처리 자동화",cat:"automation",en:"Design an automation that receives invoices by [METHOD], extracts key data, validates it against [DESCRIBE RULES], routes for approval, and updates [ACCOUNTING SYSTEM]."},
+  {id:160,ko:"모니터링 알림 시스템 구축",cat:"automation",en:"Design an automated monitoring system for [DESCRIBE WHAT IS BEING MONITORED]. What metrics trigger alerts, how are alerts prioritized, and what information is included in each alert?"},
+  {id:161,ko:"고객 지원 분류 자동화",cat:"automation",en:"Design an automation that receives support requests, categorizes them by type and priority, routes them to the right team, and sends acknowledgment to the customer."},
+  {id:162,ko:"콘텐츠 퍼블리싱 파이프라인 구축",cat:"automation",en:"Design an automated content publishing pipeline that takes a draft, runs it through [DESCRIBE CHECKS], formats it for [PLATFORMS], schedules publication, and tracks distribution."},
+  {id:163,ko:"경쟁 모니터링 자동화",cat:"automation",en:"Design an automation that monitors [DESCRIBE COMPETITORS] for changes to [DESCRIBE WHAT TO MONITOR] and delivers a weekly digest with the most important changes."},
+  {id:164,ko:"CRM 자동화 구축",cat:"automation",en:"Design automations for [CRM SYSTEM] that handle [DESCRIBE SCENARIOS]. What triggers each automation, what actions does it take, and how does it update records?"},
+  {id:165,ko:"계약서 자동 생성",cat:"automation",en:"Design an automation that takes [DESCRIBE INPUTS], selects the right contract template, populates it with the correct data, and routes it for signatures via [E-SIGNATURE TOOL]."},
+  {id:166,ko:"재고 재주문 시스템 구축",cat:"automation",en:"Design an automation that monitors inventory levels for [DESCRIBE PRODUCTS], triggers reorder when stock falls below [THRESHOLD], generates purchase orders, and tracks delivery."},
+  {id:167,ko:"직원 온보딩 자동화",cat:"automation",en:"Design an automated employee onboarding workflow that handles account creation, equipment provisioning, training assignments, introduction emails, and 30/60/90 day check-ins."},
+  {id:168,ko:"피드백 수집 시스템 구축",cat:"automation",en:"Design an automated feedback collection system for [DESCRIBE TOUCHPOINTS]. When does it trigger, what questions does it ask, how is data aggregated, and how are action items generated?"},
+  {id:169,ko:"재무 조정 자동화",cat:"automation",en:"Design an automation that reconciles [DESCRIBE ACCOUNTS] by matching transactions, flagging discrepancies, generating exception reports, and updating records after review."},
+  {id:170,ko:"지식 베이스 업데이트 시스템 구축",cat:"automation",en:"Design an automation that monitors [DESCRIBE SOURCES] for new information, suggests updates to [KNOWLEDGE BASE], routes them for approval, and publishes approved updates."},
+  {id:171,ko:"미팅 후속 자동화",cat:"automation",en:"Design an automation that processes meeting transcripts, extracts action items, assigns them to owners, creates tasks in [PROJECT MANAGEMENT TOOL], and sends follow-up emails."},
+  {id:172,ko:"가격 모니터링 시스템 구축",cat:"automation",en:"Design an automation that monitors competitor prices for [DESCRIBE PRODUCTS] across [CHANNELS], alerts when significant changes occur, and provides recommendations."},
+  {id:173,ko:"채용 공고 및 스크리닝 자동화",cat:"automation",en:"Design an automation for the recruitment process that posts jobs, screens applications against [CRITERIA], schedules interviews for qualified candidates, and sends rejections."},
+  {id:174,ko:"컴플라이언스 모니터링 시스템 구축",cat:"automation",en:"Design an automation that monitors [DESCRIBE ACTIVITIES] for compliance with [REGULATIONS], flags potential violations, and generates audit-ready reports."},
+  {id:175,ko:"고객 재유치 자동화",cat:"automation",en:"Design an automated win-back campaign for churned customers. What triggers it, what is the sequence of messages, what offers are made, and when does it give up?"},
+  {id:176,ko:"파트너 통합 자동화 구축",cat:"automation",en:"Design an automation that handles data exchange with [DESCRIBE PARTNER SYSTEM]. How does data flow, how are conflicts resolved, and how are errors handled?"},
+  {id:177,ko:"성과 검토 자동화",cat:"automation",en:"Design an automated performance review process that collects peer feedback, self assessments, and manager input, aggregates it, and generates review documents."},
+  {id:178,ko:"문서 승인 워크플로우 구축",cat:"automation",en:"Design an automated document approval workflow for [DESCRIBE DOCUMENT TYPE]. Who reviews at each stage, what triggers advancement, and how are rejections handled?"},
+  {id:179,ko:"고객 건강 점수 자동화",cat:"automation",en:"Design an automation that monitors [DESCRIBE CUSTOMER SIGNALS], calculates health scores, segments customers by risk, and triggers appropriate outreach for at-risk accounts."},
+  {id:180,ko:"웹훅 이벤트 처리 시스템 구축",cat:"automation",en:"Design a system that receives webhook events from [DESCRIBE SERVICES], routes them to the right handlers, processes them reliably, and handles retries and failures."},
+  {id:181,ko:"영업 예측 자동화",cat:"automation",en:"Design an automation that pulls data from [CRM AND OTHER SOURCES], applies [DESCRIBE FORECASTING MODEL], generates weekly forecast reports, and flags deals needing attention."},
+  {id:182,ko:"콘텐츠 조정 파이프라인 구축",cat:"automation",en:"Design an automated content moderation pipeline for [DESCRIBE PLATFORM]. What checks run automatically, what goes to human review, and how are appeals handled?"},
+  {id:183,ko:"IT 티켓 라우팅 자동화",cat:"automation",en:"Design an automation that receives IT support tickets, categorizes them, assigns priority, routes to the right team, and tracks resolution time against SLAs."},
+  {id:184,ko:"구독 관리 시스템 구축",cat:"automation",en:"Design automations for managing [DESCRIBE SUBSCRIPTION BUSINESS]. Handle signups, upgrades, downgrades, failed payments, renewals, and cancellations automatically."},
+  {id:185,ko:"시장 조사 수집 자동화",cat:"automation",en:"Design an automation that monitors [DESCRIBE SOURCES] for market intelligence on [TOPICS], filters for relevance, deduplicates, and delivers a curated daily briefing."},
+  {id:186,ko:"A/B 테스팅 자동화 구축",cat:"automation",en:"Design a system that sets up A/B tests for [DESCRIBE WHAT IS BEING TESTED], monitors results, determines statistical significance, implements winners, and documents learnings."},
+  {id:187,ko:"비용 관리 자동화",cat:"automation",en:"Design an automation that processes expense submissions, validates against [DESCRIBE POLICY], routes for approval, rejects non-compliant expenses, and exports to payroll."},
+  {id:188,ko:"사용자 라이프사이클 자동화 구축",cat:"automation",en:"Design automated workflows for each stage of the user lifecycle for [DESCRIBE PRODUCT]: activation, engagement, retention, re-engagement, and win-back."},
+  {id:189,ko:"품질 보증 테스팅 자동화",cat:"automation",en:"Design an automated QA pipeline for [DESCRIBE APPLICATION]. What tests run on each commit, what runs nightly, and what blocks deployment if it fails?"},
+  {id:190,ko:"데이터 품질 모니터링 시스템 구축",cat:"automation",en:"Design an automation that monitors [DESCRIBE DATA SOURCES] for quality issues, alerts when data is missing or anomalous, and generates data quality scorecards."},
+  {id:191,ko:"파트너 보고 자동화",cat:"automation",en:"Design an automation that compiles performance data for [DESCRIBE PARTNER PROGRAM], generates partner-specific reports, and distributes them on a defined schedule."},
+  {id:192,ko:"고객 커뮤니케이션 자동화 구축",cat:"automation",en:"Design an automation that triggers personalized communications to customers based on [DESCRIBE BEHAVIORS OR EVENTS]. What messages are sent, when, and through which channels?"},
+  {id:193,ko:"제품 분석 보고 자동화",cat:"automation",en:"Design an automation that pulls product usage data from [DESCRIBE SOURCES], calculates key metrics, generates a weekly product health report, and distributes it to stakeholders."},
+  {id:194,ko:"보안 스캐닝 파이프라인 구축",cat:"automation",en:"Design an automated security scanning pipeline for [DESCRIBE WHAT IS BEING SCANNED]. What tools run, what findings are critical versus informational, and how are remediations tracked?"},
+  {id:195,ko:"벤더 관리 자동화",cat:"automation",en:"Design automations for vendor management including onboarding, contract renewals, performance reviews, invoice processing, and off-boarding."},
+  {id:196,ko:"학습 관리 자동화 구축",cat:"automation",en:"Design automations for [LMS PLATFORM] that assign courses based on [CRITERIA], send reminders, track completion, report to managers, and issue certificates."},
+  {id:197,ko:"소셜 리스닝 및 응답 자동화",cat:"automation",en:"Design an automation that monitors social media for mentions of [BRAND/TOPICS], classifies them by sentiment and urgency, and routes to the right person for response."},
+  {id:198,ko:"릴리즈 관리 자동화 구축",cat:"automation",en:"Design an automated release management process for [DESCRIBE APPLICATION]. How are releases staged, tested, approved, deployed, and monitored?"},
+  {id:199,ko:"보조금 및 제안서 관리 자동화",cat:"automation",en:"Design an automation that tracks grant deadlines, compiles required documents, routes for review and approval, submits applications, and tracks outcomes."},
+  {id:200,ko:"위기 커뮤니케이션 자동화 구축",cat:"automation",en:"Design an automated crisis communication system that detects [DESCRIBE TRIGGER EVENTS], activates the response team, drafts communications, and manages the approval and distribution process."},
+
+  // ── CONTENT #201-250 ──
+  {id:201,ko:"바이럴 트위터 스레드",cat:"content",en:"Write a viral Twitter thread about [TOPIC]. Start with a scroll-stopping hook. Each tweet should deliver a standalone insight. End with a strong call to action. My audience is [DESCRIBE AUDIENCE]."},
+  {id:202,ko:"장문 아티클",cat:"content",en:"Write a 1500 word article about [TOPIC] for [DESCRIBE AUDIENCE]. Lead with a compelling hook, use subheadings, include specific examples, and end with a memorable conclusion."},
+  {id:203,ko:"뉴스레터 이슈",cat:"content",en:"Write a newsletter issue on [TOPIC] for [DESCRIBE AUDIENCE]. Include an opening hook, the main insight, a practical takeaway, and a closing thought that leaves them thinking."},
+  {id:204,ko:"유튜브 스크립트",cat:"content",en:"Write a YouTube video script about [TOPIC]. Include a hook in the first 30 seconds, chapter markers, engaging transitions, a call to subscribe, and a strong ending that drives comments."},
+  {id:205,ko:"LinkedIn 게시물",cat:"content",en:"Write a LinkedIn post about [TOPIC] that is professional but personal. Share a specific experience or insight, make it relevant to [DESCRIBE AUDIENCE], and end with a question that drives comments."},
+  {id:206,ko:"이메일 캠페인",cat:"content",en:"Write a 3-email campaign for [DESCRIBE GOAL]. Email 1 builds awareness. Email 2 builds desire. Email 3 drives action. Each should have a strong subject line and a clear CTA."},
+  {id:207,ko:"제품 설명",cat:"content",en:"Write a compelling product description for [DESCRIBE PRODUCT]. Focus on benefits not features, address the main customer pain point, include social proof, and end with a clear CTA."},
+  {id:208,ko:"케이스 스터디",cat:"content",en:"Write a customer case study for [DESCRIBE CUSTOMER AND OUTCOME]. Structure it as: the challenge, the solution, the implementation, and the measurable results. Make it specific and credible."},
+  {id:209,ko:"보도자료",cat:"content",en:"Write a press release announcing [DESCRIBE NEWS]. Follow AP style, lead with the most newsworthy angle, include quotes from [NAME/TITLE], and end with a boilerplate and contact information."},
+  {id:210,ko:"랜딩 페이지 카피",cat:"content",en:"Write landing page copy for [DESCRIBE PRODUCT OR SERVICE]. Include a headline, subheadline, hero section, features section, social proof, FAQ, and a strong CTA. Optimize for conversion."},
+  {id:211,ko:"팟캐스트 에피소드 개요",cat:"content",en:"Create a detailed outline for a podcast episode on [TOPIC]. Include an intro hook, 5 main segments with talking points, guest questions if applicable, and a closing CTA."},
+  {id:212,ko:"소셜 미디어 캘린더",cat:"content",en:"Create a 30-day social media content calendar for [DESCRIBE BRAND] on [PLATFORMS]. Include post topics, formats, optimal posting times, and hashtag strategies."},
+  {id:213,ko:"백서",cat:"content",en:"Write an executive summary and outline for a white paper on [TOPIC]. Target audience is [DESCRIBE]. The paper should establish authority, present original research or insight, and recommend action."},
+  {id:214,ko:"비디오 광고 스크립트",cat:"content",en:"Write a 60-second video ad script for [DESCRIBE PRODUCT]. Hook in the first 5 seconds, present the problem, introduce the solution, show the benefit, and end with a clear CTA."},
+  {id:215,ko:"웨비나 프레젠테이션",cat:"content",en:"Create a 45-minute webinar presentation outline on [TOPIC]. Include audience engagement questions, a value packed middle section, and a strong close that drives registrations for [NEXT STEP]."},
+  {id:216,ko:"SEO 아티클",cat:"content",en:"Write a 2000 word SEO-optimized article targeting the keyword [KEYWORD]. Include the keyword naturally, use proper heading structure, answer the search intent, and include internal and external link opportunities."},
+  {id:217,ko:"영업 이메일 시퀀스",cat:"content",en:"Write a 5-email cold outreach sequence for [DESCRIBE OFFER] targeting [DESCRIBE PROSPECT]. Each email should be short, personalized, and move the conversation forward without being pushy."},
+  {id:218,ko:"바이오 및 소개 페이지",cat:"content",en:"Write a compelling bio for [DESCRIBE PERSON] for use on [DESCRIBE CONTEXT]. Make it authoritative but human, highlight the most relevant credentials, and end with what they are working on now."},
+  {id:219,ko:"비교 아티클",cat:"content",en:"Write a comparison article between [OPTION A] and [OPTION B] for [DESCRIBE USE CASE]. Be balanced, specific, and help the reader make the right choice for their situation."},
+  {id:220,ko:"하우투 가이드",cat:"content",en:"Write a comprehensive how-to guide for [DESCRIBE TASK] aimed at [DESCRIBE AUDIENCE]. Break it into clear steps, include common mistakes to avoid, and add pro tips throughout."},
+  {id:221,ko:"인터뷰 질문",cat:"content",en:"Write 20 deep interview questions for [DESCRIBE GUEST] that will produce insightful, quotable answers. Avoid generic questions and get to the insights your audience actually wants."},
+  {id:222,ko:"도서 요약",cat:"content",en:"Write a comprehensive summary of [BOOK TITLE]. Cover the core thesis, the most important ideas, the best frameworks, key quotes, and what actions a reader should take after reading it."},
+  {id:223,ko:"오피니언 피스",cat:"content",en:"Write a strong opinion piece arguing that [DESCRIBE POSITION] on the topic of [TOPIC]. Make the argument clearly, acknowledge counterarguments honestly, and end with a call to rethink conventional wisdom."},
+  {id:224,ko:"FAQ 페이지",cat:"content",en:"Write a comprehensive FAQ page for [DESCRIBE PRODUCT OR SERVICE]. Anticipate the real questions customers have including objections and concerns, and answer each one clearly and honestly."},
+  {id:225,ko:"온보딩 이메일 시리즈",cat:"content",en:"Write a 7-email onboarding series for new [CUSTOMERS/USERS] of [DESCRIBE PRODUCT]. Each email should help them get one specific value as quickly as possible and build toward full adoption."},
+  {id:226,ko:"연간 보고서 내러티브",cat:"content",en:"Write the narrative sections of an annual report for [DESCRIBE COMPANY]. Cover the year in review, key achievements, challenges overcome, and vision for the year ahead. Tone should be honest and forward-looking."},
+  {id:227,ko:"사고 리더십 아티클",cat:"content",en:"Write a thought leadership article establishing [NAME] as an authority on [TOPIC]. Share a contrarian or original insight, back it with evidence or experience, and challenge the reader to think differently."},
+  {id:228,ko:"이벤트 초대 카피",cat:"content",en:"Write invitation copy for [DESCRIBE EVENT]. Create urgency, communicate the specific value of attending, address who should come, and make the registration CTA impossible to ignore."},
+  {id:229,ko:"추천사 요청 이메일",cat:"content",en:"Write an email asking [DESCRIBE CUSTOMER] for a testimonial for [DESCRIBE PRODUCT]. Make it easy to respond, suggest the format, and explain how it will be used."},
+  {id:230,ko:"제품 출시 이메일",cat:"content",en:"Write a product launch email for [DESCRIBE PRODUCT] to [DESCRIBE AUDIENCE]. Build anticipation, communicate the key benefit clearly, create urgency, and drive clicks to [DESCRIBE CTA]."},
+  {id:231,ko:"설명 콘텐츠",cat:"content",en:"Write an explainer for [COMPLEX TOPIC] aimed at [DESCRIBE AUDIENCE]. Use analogies and examples to make it accessible, avoid jargon, and leave the reader feeling like they actually understand it."},
+  {id:232,ko:"커뮤니티 게시물",cat:"content",en:"Write an engaging community post for [DESCRIBE COMMUNITY] on [TOPIC]. Start a conversation, share something genuinely useful, and end with a question that invites responses."},
+  {id:233,ko:"피치덱 내러티브",cat:"content",en:"Write the narrative for a pitch deck for [DESCRIBE COMPANY]. Cover the problem, solution, market, traction, team, and ask. Make each slide advance the story compellingly."},
+  {id:234,ko:"어워드 제출",cat:"content",en:"Write an awards submission for [DESCRIBE COMPANY OR PROJECT] for the [DESCRIBE AWARD]. Highlight the most relevant achievements, use specific metrics, and make the case for why this deserves to win."},
+  {id:235,ko:"리서치 보고서 요약",cat:"content",en:"Write a 500-word executive summary for a research report on [TOPIC]. Distill the key findings, highlight the most surprising insights, and state the recommended actions clearly."},
+  {id:236,ko:"제품 업데이트 공지",cat:"content",en:"Write an announcement for the product update [DESCRIBE UPDATE]. Lead with the user benefit, explain what changed and why, include any necessary instructions, and end with what is coming next."},
+  {id:237,ko:"에버그린 콘텐츠",cat:"content",en:"Write an evergreen content piece on [TOPIC] that will still be relevant in five years. Focus on principles over tactics, include timeless examples, and structure it for easy reference."},
+  {id:238,ko:"논쟁적 관점",cat:"content",en:"Write a take on [TOPIC] that challenges the mainstream view in [INDUSTRY/COMMUNITY]. Make the argument boldly, back it with evidence, and anticipate the strongest objections."},
+  {id:239,ko:"브랜드 스토리",cat:"content",en:"Write the brand story for [COMPANY]. Cover the founding moment, the problem being solved, the mission, what makes the company different, and where it is going. Make it human and memorable."},
+  {id:240,ko:"재참여 캠페인",cat:"content",en:"Write a 3-email re-engagement campaign for [DESCRIBE INACTIVE SEGMENT]. Acknowledge the gap, offer genuine value to come back, and give them a clear reason to re-engage now."},
+  {id:241,ko:"워크숍 커리큘럼",cat:"content",en:"Design a half-day workshop curriculum on [TOPIC] for [DESCRIBE AUDIENCE]. Include learning objectives, session breakdown, activities, materials needed, and how you will measure success."},
+  {id:242,ko:"투자자 업데이트 이메일",cat:"content",en:"Write a monthly investor update email for [DESCRIBE COMPANY]. Cover progress against goals, key metrics, wins, challenges, what you need, and what you are focused on next month."},
+  {id:243,ko:"파트너십 제안서",cat:"content",en:"Write a partnership proposal to [DESCRIBE POTENTIAL PARTNER] from [DESCRIBE YOUR COMPANY]. Make the value to both parties clear, propose specific collaboration mechanics, and suggest concrete next steps."},
+  {id:244,ko:"추천 프로그램 카피",cat:"content",en:"Write the copy for a customer referral program for [DESCRIBE PRODUCT]. Include the program explanation, the offer, how it works, the terms, and promotional messages for customers to share."},
+  {id:245,ko:"커뮤니티 가이드라인",cat:"content",en:"Write community guidelines for [DESCRIBE COMMUNITY]. Cover what behavior is expected, what is not allowed, how violations are handled, and the values that underpin the rules. Make them human not legalistic."},
+  {id:246,ko:"채용 공고",cat:"content",en:"Write a job description for a [JOB TITLE] at [DESCRIBE COMPANY]. Make the role compelling to the right candidate, be honest about challenges, describe the impact they will have, and list only the requirements that actually matter."},
+  {id:247,ko:"보조금 제안 내러티브",cat:"content",en:"Write the narrative section of a grant proposal for [DESCRIBE PROJECT] seeking funding from [DESCRIBE FUNDER]. Make the case for impact, explain the approach, demonstrate capability, and align with funder priorities."},
+  {id:248,ko:"위기 커뮤니케이션 성명",cat:"content",en:"Write a crisis communication statement for [DESCRIBE SITUATION]. Acknowledge the issue directly, take appropriate responsibility, explain what is being done, and communicate what stakeholders can expect next."},
+  {id:249,ko:"제품 로드맵 커뮤니케이션",cat:"content",en:"Write a communication to [DESCRIBE AUDIENCE] explaining the product roadmap for [DESCRIBE PRODUCT]. Explain the strategic direction, what is coming when, and what it means for them."},
+  {id:250,ko:"연간 리뷰",cat:"content",en:"Write a year in review post for [DESCRIBE PERSON OR COMPANY]. Cover the biggest wins, the hardest lessons, what changed your thinking, and what you are most excited about for next year. Be honest and specific."},
+
+  // ── PRODUCTIVITY #251-300 ──
+  {id:251,ko:"일일 계획 시스템",cat:"productivity",en:"Design a daily planning system for [DESCRIBE ROLE AND GOALS]. Include morning routine, time blocking, priority framework, end of day review, and how to handle interruptions and unexpected tasks."},
+  {id:252,ko:"주간 리뷰 템플릿",cat:"productivity",en:"Create a weekly review template for [DESCRIBE PERSON AND GOALS]. Cover what got done, what did not, what was learned, priorities for next week, and any systems that need adjustment."},
+  {id:253,ko:"목표 설정 프레임워크",cat:"productivity",en:"Design a goal setting framework for [DESCRIBE CONTEXT]. Cover how goals are set, how they cascade to daily actions, how progress is tracked, and how to course correct when off track."},
+  {id:254,ko:"미팅 효율성 시스템",cat:"productivity",en:"Design a system for making meetings more effective for [DESCRIBE TEAM OR ORGANIZATION]. Cover when meetings should happen, how they are structured, how decisions are documented, and how follow-up is managed."},
+  {id:255,ko:"의사결정 프레임워크",cat:"productivity",en:"Create a decision making framework for [DESCRIBE TYPE OF DECISIONS]. Define what information is needed, who should be involved, how options should be evaluated, and how decisions should be documented."},
+  {id:256,ko:"이메일 관리 시스템",cat:"productivity",en:"Design a system for managing email for [DESCRIBE ROLE]. Cover inbox organization, response time standards, templates for common responses, and how to achieve and maintain inbox zero."},
+  {id:257,ko:"지식 관리 시스템",cat:"productivity",en:"Design a personal knowledge management system for [DESCRIBE PERSON AND WORK]. Cover how information is captured, organized, linked, retrieved, and how it is converted into output."},
+  {id:258,ko:"프로젝트 관리 템플릿",cat:"productivity",en:"Create a project management template for [DESCRIBE TYPE OF PROJECT]. Include project brief, stakeholder map, milestone plan, risk register, communication plan, and retrospective framework."},
+  {id:259,ko:"습관 형성 시스템",cat:"productivity",en:"Design a habit building system for adding [DESCRIBE HABITS] to a [DESCRIBE PERSON]'s routine. Cover habit design, tracking, accountability, recovery from missed days, and how to stack habits effectively."},
+  {id:260,ko:"집중력 및 딥워크 시스템",cat:"productivity",en:"Design a system for protecting and maximizing deep work time for [DESCRIBE ROLE]. Cover environment design, scheduling, managing interruptions, and measuring output quality."},
+  {id:261,ko:"위임 프레임워크",cat:"productivity",en:"Design a delegation framework for [DESCRIBE MANAGER AND TEAM]. Cover what to delegate, how to brief tasks, what oversight is appropriate, and how to develop team members through delegation."},
+  {id:262,ko:"콘텐츠 제작 시스템",cat:"productivity",en:"Design a content creation system for producing [DESCRIBE CONTENT TYPE] consistently. Cover ideation, drafting, editing, production, distribution, and performance review."},
+  {id:263,ko:"개인 재무 시스템",cat:"productivity",en:"Design a personal finance tracking and management system for [DESCRIBE FINANCIAL SITUATION AND GOALS]. Cover income tracking, expense categories, savings automation, investment review, and monthly reconciliation."},
+  {id:264,ko:"학습 시스템",cat:"productivity",en:"Design a system for learning [DESCRIBE SUBJECT OR SKILL] efficiently. Cover how to find the best resources, how to process and retain information, how to practice, and how to measure progress."},
+  {id:265,ko:"네트워크 구축 시스템",cat:"productivity",en:"Design a system for building and maintaining a professional network for [DESCRIBE PERSON AND GOALS]. Cover how to meet new people, how to stay in touch, how to provide value, and how to track relationships."},
+  {id:266,ko:"독서 및 노트 시스템",cat:"productivity",en:"Design a system for reading and retaining insights from [DESCRIBE READING MATERIAL]. Cover selection criteria, active reading techniques, note taking format, review schedule, and how to apply insights."},
+  {id:267,ko:"아침 루틴 설계",cat:"productivity",en:"Design an optimal morning routine for [DESCRIBE PERSON, GOALS, AND CONSTRAINTS]. Cover wake time, physical activity, mindset practices, planning, and how to make it sustainable long term."},
+  {id:268,ko:"에너지 관리 시스템",cat:"productivity",en:"Design an energy management system for [DESCRIBE PERSON AND WORK]. Cover how to schedule tasks by energy level, recovery practices, nutrition and sleep optimization, and how to identify energy drains."},
+  {id:269,ko:"피드백 시스템",cat:"productivity",en:"Design a system for giving and receiving feedback in [DESCRIBE CONTEXT]. Cover how feedback is solicited, delivered, received, processed, and acted upon."},
+  {id:270,ko:"아이디어 관리 시스템",cat:"productivity",en:"Design a system for capturing, developing, and acting on ideas for [DESCRIBE PERSON AND CONTEXT]. Cover how ideas are captured, evaluated, developed, prioritized, and either implemented or archived."},
+  {id:271,ko:"클라이언트 관리 시스템",cat:"productivity",en:"Design a client management system for [DESCRIBE FREELANCER OR AGENCY]. Cover onboarding, communication standards, project tracking, invoicing, and relationship maintenance."},
+  {id:272,ko:"채용 시스템",cat:"productivity",en:"Design a hiring system for [DESCRIBE ROLE AND COMPANY]. Cover job scoping, sourcing, screening, interviews, assessment, offers, and onboarding. Minimize bias and time to hire."},
+  {id:273,ko:"영업 프로세스 시스템",cat:"productivity",en:"Design a sales process for [DESCRIBE PRODUCT AND MARKET]. Cover prospecting, qualification, discovery, proposal, negotiation, closing, and handoff to customer success."},
+  {id:274,ko:"고객 성공 플레이북",cat:"productivity",en:"Design a customer success playbook for [DESCRIBE PRODUCT]. Cover onboarding, health monitoring, QBRs, expansion plays, renewal process, and churn prevention."},
+  {id:275,ko:"팀 커뮤니케이션 시스템",cat:"productivity",en:"Design a team communication system for [DESCRIBE TEAM]. Cover which tools are used for what, response time expectations, meeting cadences, and how decisions and context are documented."},
+  {id:276,ko:"성과 관리 시스템",cat:"productivity",en:"Design a performance management system for [DESCRIBE TEAM]. Cover goal setting, regular check-ins, performance reviews, recognition, and how to handle underperformance."},
+  {id:277,ko:"개인 생산성 감사",cat:"productivity",en:"Conduct a personal productivity audit framework for [DESCRIBE ROLE]. Cover how to identify time wasters, measure output versus activity, find leverage points, and redesign the workday."},
+  {id:278,ko:"분기 계획 시스템",cat:"productivity",en:"Design a quarterly planning system for [DESCRIBE PERSON OR TEAM]. Cover how to review the previous quarter, set priorities for the next, allocate resources, and create accountability."},
+  {id:279,ko:"리서치 및 종합 시스템",cat:"productivity",en:"Design a system for conducting research on [DESCRIBE TOPIC TYPE] and synthesizing it into actionable insights. Cover source selection, reading strategy, note-taking, synthesis, and output format."},
+  {id:280,ko:"제품 개발 시스템",cat:"productivity",en:"Design a product development system for [DESCRIBE TEAM]. Cover discovery, prioritization, specification, design, development, testing, launch, and post-launch review."},
+  {id:281,ko:"예산 관리 시스템",cat:"productivity",en:"Design a budget management system for [DESCRIBE CONTEXT]. Cover how budgets are set, tracked, reviewed, and how variances are identified and addressed."},
+  {id:282,ko:"갈등 해결 프레임워크",cat:"productivity",en:"Design a conflict resolution framework for [DESCRIBE CONTEXT]. Cover how conflicts are surfaced, the resolution process, who is involved, and how outcomes are documented."},
+  {id:283,ko:"혁신 시스템",cat:"productivity",en:"Design a system for generating and developing innovative ideas in [DESCRIBE ORGANIZATION]. Cover how ideas are submitted, evaluated, developed, resourced, and implemented."},
+  {id:284,ko:"벤더 선정 프레임워크",cat:"productivity",en:"Design a vendor selection framework for [DESCRIBE TYPE OF PURCHASE]. Cover requirements gathering, market scanning, RFP process, evaluation criteria, and decision documentation."},
+  {id:285,ko:"위기 관리 시스템",cat:"productivity",en:"Design a crisis management system for [DESCRIBE ORGANIZATION]. Cover how crises are detected, classified, escalated, managed, communicated, and reviewed after resolution."},
+  {id:286,ko:"교육 및 개발 시스템",cat:"productivity",en:"Design a training and development system for [DESCRIBE TEAM]. Cover skills assessment, learning paths, delivery methods, progress tracking, and how learning connects to performance."},
+  {id:287,ko:"OKR 시스템",cat:"productivity",en:"Design an OKR implementation for [DESCRIBE ORGANIZATION OR TEAM]. Cover how OKRs are set, cascaded, tracked, reviewed, and how they connect to compensation and recognition."},
+  {id:288,ko:"회고 시스템",cat:"productivity",en:"Design a retrospective system for [DESCRIBE TEAM]. Cover cadence, format, facilitation, how insights are captured, how action items are tracked, and how the team measures whether retrospectives are working."},
+  {id:289,ko:"문서화 시스템",cat:"productivity",en:"Design a documentation system for [DESCRIBE TEAM OR PRODUCT]. Cover what needs to be documented, who is responsible, where it lives, how it stays current, and how people find what they need."},
+  {id:290,ko:"오프보딩 시스템",cat:"productivity",en:"Design an employee offboarding system for [DESCRIBE ORGANIZATION]. Cover knowledge transfer, access revocation, exit interviews, equipment return, and maintaining the relationship for future reference."},
+  {id:291,ko:"콘텐츠 캘린더 시스템",cat:"productivity",en:"Design a content calendar system for [DESCRIBE BRAND]. Cover how topics are generated, assigned, produced, reviewed, scheduled, and how performance informs future planning."},
+  {id:292,ko:"파트너십 관리 시스템",cat:"productivity",en:"Design a system for managing strategic partnerships for [DESCRIBE COMPANY]. Cover partner onboarding, communication cadence, joint planning, performance tracking, and renewal process."},
+  {id:293,ko:"조달 시스템",cat:"productivity",en:"Design a procurement system for [DESCRIBE ORGANIZATION]. Cover how needs are identified, approved, sourced, contracted, and how supplier performance is managed."},
+  {id:294,ko:"리스크 관리 시스템",cat:"productivity",en:"Design a risk management system for [DESCRIBE ORGANIZATION OR PROJECT]. Cover how risks are identified, assessed, prioritized, mitigated, monitored, and reported."},
+  {id:295,ko:"고객 피드백 시스템",cat:"productivity",en:"Design a comprehensive customer feedback system for [DESCRIBE BUSINESS]. Cover all feedback touchpoints, how feedback is collected, analyzed, prioritized, actioned, and communicated back to customers."},
+  {id:296,ko:"데이터 거버넌스 시스템",cat:"productivity",en:"Design a data governance system for [DESCRIBE ORGANIZATION]. Cover data ownership, quality standards, access controls, compliance requirements, and how data issues are reported and resolved."},
+  {id:297,ko:"브랜드 관리 시스템",cat:"productivity",en:"Design a brand management system for [DESCRIBE BRAND]. Cover brand guidelines, approval processes, asset management, consistency monitoring, and how the brand evolves over time."},
+  {id:298,ko:"전략적 기획 시스템",cat:"productivity",en:"Design a strategic planning system for [DESCRIBE ORGANIZATION]. Cover the annual planning cycle, how market intelligence informs strategy, how plans are communicated, and how execution is tracked."},
+  {id:299,ko:"개인 이사회",cat:"productivity",en:"Design a personal board of directors system for [DESCRIBE PERSON AND GOALS]. Cover who should be on it, how to recruit members, what the relationship looks like, and how to get maximum value from each advisor."},
+  {id:300,ko:"인생 설계 시스템",cat:"productivity",en:"Design a comprehensive life design system for [DESCRIBE PERSON]. Cover career, relationships, health, finances, learning, and personal fulfillment. Include how all areas are reviewed and balanced over time."}
+];
+
+// ── State ──
+let activeCat = 'all';
+let searchQ = '';
+
+// ── Render ──
+function highlight(text, q) {
+  if (!q) return text;
+  const safe = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return text.replace(new RegExp(`(${safe})`, 'gi'), '<mark>$1</mark>');
+}
+
+function renderCards() {
+  const grid = document.getElementById('promptsGrid');
+  const q = searchQ.toLowerCase().trim();
+
+  const filtered = PROMPTS.filter(p => {
+    const catOk = activeCat === 'all' || p.cat === activeCat;
+    if (!catOk) return false;
+    if (!q) return true;
+    return p.ko.toLowerCase().includes(q) || p.en.toLowerCase().includes(q);
+  });
+
+  document.getElementById('visibleCount').textContent = filtered.length;
+
+  if (filtered.length === 0) {
+    grid.innerHTML = `<div class="empty-state"><h3>검색 결과가 없습니다</h3><p>"${searchQ}"에 해당하는 프롬프트를 찾을 수 없습니다.</p></div>`;
+    return;
+  }
+
+  grid.innerHTML = filtered.map(p => {
+    const catLabel = CAT_LABELS[p.cat];
+    const titleHl = highlight(p.ko, q);
+    const contentHl = highlight(p.en, q);
+    const num = String(p.id).padStart(3, '0');
+    return `
+    <article class="prompt-card" data-id="${p.id}">
+      <div class="card-header">
+        <span class="card-num">#${num}</span>
+        <span class="card-cat">${catLabel}</span>
+      </div>
+      <h3 class="card-title">${titleHl}</h3>
+      <p class="card-content">${contentHl}</p>
+      <div class="card-footer">
+        <button class="copy-btn" onclick="copyPrompt(${p.id}, this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
+          </svg>
+          복사
+        </button>
+      </div>
+    </article>`;
+  }).join('');
+}
+
+// ── Copy ──
+function copyPrompt(id, btn) {
+  const p = PROMPTS.find(x => x.id === id);
+  if (!p) return;
+  navigator.clipboard.writeText(p.en).then(() => {
+    btn.classList.add('copied');
+    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> 복사됨`;
+    showToast();
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> 복사`;
+    }, 2000);
+  });
+}
+
+function showToast() {
+  const t = document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+// ── Filter buttons ──
+document.getElementById('filterBar').addEventListener('click', e => {
+  const btn = e.target.closest('.filter-btn');
+  if (!btn) return;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  activeCat = btn.dataset.cat;
+  renderCards();
+});
+
+// ── Search ──
+let searchTimer;
+document.getElementById('searchInput').addEventListener('input', e => {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(() => {
+    searchQ = e.target.value;
+    renderCards();
+  }, 150);
+});
+
+// ── Init ──
+renderCards();
+</script>
+</body>
+</html>
